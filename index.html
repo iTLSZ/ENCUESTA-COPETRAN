@@ -1511,7 +1511,6 @@
 
       document.getElementById('modal-cancel').onclick = () => overlay.remove();
       document.getElementById('modal-confirm').onclick = () => {
-        overlay.remove();
         const confirmBtn = document.getElementById('modal-confirm');
         confirmBtn.textContent = 'Eliminando...';
         confirmBtn.disabled = true;
@@ -1522,6 +1521,7 @@
           body: JSON.stringify({ action: 'reset' })
         })
           .finally(() => {
+            overlay.remove();
             _memoryData = { responses: [] };
             Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) { } });
             chartInstances = {};
