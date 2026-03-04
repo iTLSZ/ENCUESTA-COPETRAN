@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encuesta de Satisfacción – Copetran</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --red: #1565C0;
+      --red-dark: #0D3B86;
+      --red-light: #1976D2;
+      --gold: #ffffff;
+      --dark: #1A1A2E;
+      --mid: #2D2D44;
+      --light: #F7F7F7;
+      --white: #ffffff;
+      --gray: #6b7280;
+      --gray-light: #E5E7EB;
+      --green: #16a34a;
+      --yellow: #d97706;
+      --muted-red: #dc2626;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #F0F2F5;
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 60%, var(--red-light) 100%);
+      color: white;
+      padding: 28px 24px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -30px;
+      width: 160px;
+      height: 160px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 50%;
+    }
+
+    .header-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .header-logo span {
+      color: #ffffff;
+    }
+
+    .header-sub {
+      font-size: 0.88rem;
+      opacity: 0.85;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .num {
+      background: var(--red);
+      color: white;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* INTRO TEXT */
+    .intro-text {
+      font-size: 0.93rem;
+      color: #374151;
+      line-height: 1.65;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #EFF4FC;
+      border-left: 4px solid var(--red);
+      border-radius: 8px;
+    }
+
+    /* OPTIONAL FIELDS */
+    .form-row {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    label .opt {
+      font-weight: 400;
+      color: var(--gray);
+      font-size: 0.8rem;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.93rem;
+      color: var(--dark);
+      transition: border-color 0.2s;
+      outline: none;
+      background: #fafafa;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--red);
+      background: white;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    /* SERVICE SELECTOR */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    @media(max-width: 500px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .service-chip {
+      border: 2px solid var(--gray-light);
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #374151;
+      background: #fafafa;
+      user-select: none;
+    }
+
+    .service-chip:hover {
+      border-color: var(--red);
+      background: #EFF4FC;
+      color: var(--red-dark);
+    }
+
+    .service-chip.selected {
+      border-color: var(--red);
+      background: #EFF4FC;
+      color: var(--red);
+    }
+
+    .service-chip .check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--gray-light);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      font-size: 0.75rem;
+    }
+
+    .service-chip.selected .check {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+
+    .service-icon {
+      font-size: 1.3rem;
+    }
+
+    .select-all-btn {
+      background: none;
+      border: 1.5px solid var(--red);
+      color: var(--red);
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .select-all-btn:hover {
+      background: var(--red);
+      color: white;
+    }
+
+    /* RATING TABLE */
+    .rating-section-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      margin-top: 20px;
+    }
+
+    .rating-section-desc {
+      font-size: 0.82rem;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+
+    .rating-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+      font-size: 0.88rem;
+    }
+
+    .rating-table thead th {
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--gray-light);
+    }
+
+    .rating-table thead th:first-child {
+      text-align: left;
+    }
+
+    .rating-table thead th.th-bueno {
+      color: var(--green);
+    }
+
+    .rating-table thead th.th-regular {
+      color: var(--yellow);
+    }
+
+    .rating-table thead th.th-malo {
+      color: var(--muted-red);
+    }
+
+    .rating-table tbody tr {
+      border-bottom: 1px solid #F3F4F6;
+      transition: background 0.15s;
+    }
+
+    .rating-table tbody tr:hover {
+      background: #F5F8FF;
+    }
+
+    .rating-table tbody td {
+      padding: 11px 10px;
+      vertical-align: middle;
+    }
+
+    .rating-table tbody td:first-child {
+      font-weight: 500;
+      color: #374151;
+      font-size: 0.86rem;
+    }
+
+    .rating-table tbody td.td-radio {
+      text-align: center;
+    }
+
+    /* Custom radio */
+    .radio-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .radio-wrap input[type="radio"] {
+      display: none;
+    }
+
+    .radio-wrap label {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s;
+      margin: 0;
+      font-size: 0.75rem;
+    }
+
+    .radio-bueno label:hover {
+      border-color: var(--green);
+      background: #dcfce7;
+    }
+
+    .radio-regular label:hover {
+      border-color: var(--yellow);
+      background: #fef3c7;
+    }
+
+    .radio-malo label:hover {
+      border-color: var(--muted-red);
+      background: #fee2e2;
+    }
+
+    .radio-wrap input[type="radio"]:checked+label {
+      color: white;
+      font-weight: 700;
+    }
+
+    .radio-bueno input:checked+label {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .radio-regular input:checked+label {
+      background: var(--yellow);
+      border-color: var(--yellow);
+    }
+
+    .radio-malo input:checked+label {
+      background: var(--muted-red);
+      border-color: var(--muted-red);
+    }
+
+    /* DIVIDER */
+    .divider {
+      border: none;
+      border-top: 2px dashed var(--gray-light);
+      margin: 24px 0;
+    }
+
+    /* SERVICE BLOCK HEADER */
+    .service-block-header {
+      background: linear-gradient(90deg, var(--red-dark), var(--red));
+      color: white;
+      border-radius: 10px 10px 0 0;
+      padding: 14px 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .service-block {
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .service-block-body {
+      background: white;
+      padding: 20px;
+    }
+
+    /* SUBMIT BUTTON */
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red-dark), var(--red-light));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(21, 101, 192, 0.35);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(21, 101, 192, 0.45);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* SUCCESS */
+    .success-screen {
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .success-sub {
+      font-size: 0.93rem;
+      color: var(--gray);
+    }
+
+    /* RESULTS / ADMIN */
+    .admin-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--dark);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      z-index: 100;
+    }
+
+    .admin-btn:hover {
+      background: var(--mid);
+      transform: translateY(-2px);
+    }
+
+    /* RESULTS PANEL */
+    .results-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .results-inner {
+      background: white;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .results-header {
+      background: linear-gradient(135deg, var(--dark), var(--mid));
+      color: white;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .results-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .results-body {
+      padding: 28px;
+    }
+
+    .results-section {
+      margin-bottom: 36px;
+    }
+
+    .results-section h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gray-light);
+    }
+
+    /* Data table in results */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-bottom: 20px;
+    }
+
+    .data-table th {
+      background: #F9FAFB;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray);
+      border-bottom: 2px solid var(--gray-light);
+    }
+
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #F3F4F6;
+    }
+
+    .data-table td.num {
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .data-table td.bueno {
+      color: var(--green);
+    }
+
+    .data-table td.regular {
+      color: var(--yellow);
+    }
+
+    .data-table td.malo {
+      color: var(--muted-red);
+    }
+
+    .data-table tbody tr:hover {
+      background: #F9FAFB;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 260px;
+      margin-top: 12px;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--gray-light);
+      border-radius: 8px;
+      background: none;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+      background: #EFF4FC;
+    }
+
+    .reset-btn {
+      background: none;
+      border: 1.5px solid #dc2626;
+      color: #dc2626;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .reset-btn:hover {
+      background: #dc2626;
+      color: white;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: #F9FAFB;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat-card .val {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+    }
+
+    .stat-card .lbl {
+      font-size: 0.78rem;
+      color: var(--gray);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .val.green {
+      color: var(--green);
+    }
+
+    .val.yellow {
+      color: var(--yellow);
+    }
+
+    .val.red {
+      color: var(--muted-red);
+    }
+
+    .badge-total {
+      display: inline-block;
+      background: var(--dark);
+      color: white;
+      border-radius: 20px;
+      padding: 2px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @media(max-width:600px) {
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .results-body {
+        padding: 16px;
+      }
+    }
+
+    @media(max-width:550px) {
+      .charts-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="header-logo">COPE<span>TRAN</span></div>
+    <div class="header-sub">Encuesta de Satisfacción del Servicio</div>
+  </div>
+
+  <!-- SURVEY FORM -->
+  <div class="container" id="survey-container">
+
+    <!-- PAGE 1: Info + Service Selection -->
+    <div class="page active" id="page1">
+      <div class="card">
+        <p class="intro-text">
+          Para nosotros es importante su opinión en cuanto a la <strong>satisfacción de nuestro servicio</strong>. Le
+          invitamos a responder las siguientes preguntas. Su respuesta es confidencial y voluntaria.
+        </p>
+        <div class="form-row">
+          <label>Nombre <span class="opt">(opcional)</span></label>
+          <input type="text" id="inp_nombre" placeholder="Su nombre">
+        </div>
+        <div class="form-row">
+          <label>Teléfono <span class="opt">(opcional)</span></label>
+          <input type="tel" id="inp_telefono" placeholder="Su número de teléfono">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Seleccione los servicios a evaluar</div>
+        <button class="select-all-btn" onclick="toggleAll()">✓ Seleccionar todos</button>
+        <div class="services-grid">
+          <div class="service-chip" onclick="toggleService(this,'camioneta')">
+            <span class="service-icon">🚐</span>
+            <div>
+              <div class="check"></div>
+            </div>
+            <span>Camioneta Copetran</span>
+          </div>
+          <div class="service-chip" onclick="toggleService(this,'bus')">
+            <span class="service-icon">🚌</span>
+            <div>
+              <div class="check"></div>
+            </div>
+            <span>Bus Intermunicipal</span>
+          </div>
+          <div class="service-chip" onclick="toggleService(this,'tajo')">
+            <span class="service-icon">🚚</span>
+            <div>
+              <div class="check"></div>
+            </div>
+            <span>Servicio de Tajo</span>
+          </div>
+          <div class="service-chip" onclick="toggleService(this,'urbana')">
+            <span class="service-icon">🚍</span>
+            <div>
+              <div class="check"></div>
+            </div>
+            <span>Ruta Urbana</span>
+          </div>
+          <div class="service-chip" onclick="toggleService(this,'poblacion')">
+            <span class="service-icon">🛣️</span>
+            <div>
+              <div class="check"></div>
+            </div>
+            <span>Ruta de Población</span>
+          </div>
+        </div>
+        <div id="service-error" style="color:#dc2626;font-size:0.82rem;display:none;margin-top:4px;">Por favor
+          seleccione al menos un servicio.</div>
+      </div>
+
+      <button class="btn-submit" onclick="goToSurvey()">Continuar →</button>
+    </div>
+
+    <!-- PAGE 2: The survey questions (ONE form for all selected services) -->
+    <div class="page" id="page2">
+
+      <!-- Selected services badge -->
+      <div class="card" style="padding:16px 20px;">
+        <div
+          style="font-size:0.8rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">
+          Evaluando los servicios:</div>
+        <div id="selected-services-badges" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+
+      <!-- CONDUCTOR -->
+      <div class="service-block">
+        <div class="service-block-header">🧑‍✈️ 1. Conductor</div>
+        <div class="service-block-body">
+          <p class="rating-section-desc" style="margin-bottom:12px;">Califique el desempeño y prestación del servicio de
+            los conductores de Copetran:</p>
+          <table class="rating-table">
+            <thead>
+              <tr>
+                <th>Aspecto</th>
+                <th class="th-bueno">Bueno</th>
+                <th class="th-regular">Regular</th>
+                <th class="th-malo">Malo</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-conductor"></tbody>
+          </table>
+          <div class="form-row" style="margin-top:12px;">
+            <label>¿Por qué? – General Conductor <span class="opt">(opcional)</span></label>
+            <textarea id="why_conductor" placeholder="Comentarios opcionales..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- VEHÍCULO -->
+      <div class="service-block">
+        <div class="service-block-header">🚌 2. Vehículo</div>
+        <div class="service-block-body">
+          <p class="rating-section-desc" style="margin-bottom:12px;">Califique el estado y operación de los vehículos de
+            Copetran:</p>
+          <table class="rating-table">
+            <thead>
+              <tr>
+                <th>Aspecto</th>
+                <th class="th-bueno">Bueno</th>
+                <th class="th-regular">Regular</th>
+                <th class="th-malo">Malo</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-vehiculo"></tbody>
+          </table>
+          <div class="form-row" style="margin-top:12px;">
+            <label>¿Por qué? – General Vehículo <span class="opt">(opcional)</span></label>
+            <textarea id="why_vehiculo" placeholder="Comentarios opcionales..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- NORMAS -->
+      <div class="service-block">
+        <div class="service-block-header">📋 3. Normas</div>
+        <div class="service-block-body">
+          <p class="rating-section-desc" style="margin-bottom:12px;">Califique el cumplimiento de las normas de tránsito
+            y transporte:</p>
+          <table class="rating-table">
+            <thead>
+              <tr>
+                <th>Aspecto</th>
+                <th class="th-bueno">Bueno</th>
+                <th class="th-regular">Regular</th>
+                <th class="th-malo">Malo</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-normas"></tbody>
+          </table>
+          <div class="form-row" style="margin-top:12px;">
+            <label>¿Por qué? – General Normas <span class="opt">(opcional)</span></label>
+            <textarea id="why_normas" placeholder="Comentarios opcionales..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mejoras -->
+      <div class="card">
+        <div class="card-title"><span class="num">💬</span> Oportunidades de Mejora</div>
+        <p style="font-size:0.85rem;color:#6b7280;margin-bottom:12px;">Su opinión es valiosa. Infórmenos si considera
+          algunas oportunidades de mejora de nuestros servicios. <em>(Opcional)</em></p>
+        <textarea id="inp_mejoras" placeholder="Escriba aquí sus sugerencias..."></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="submitSurvey()">Enviar Encuesta 🚀</button>
+    </div>
+
+    <!-- SUCCESS PAGE -->
+    <div class="page" id="page3">
+      <div class="card success-screen">
+        <div class="success-icon">✅</div>
+        <div class="success-title">¡Gracias por su opinión!</div>
+        <p class="success-sub">Su respuesta ha sido registrada. Su opinión nos ayuda a mejorar el servicio de Copetran.
+        </p>
+        <br>
+        <button class="btn-submit" style="max-width:280px;margin:0 auto;display:block;" onclick="resetSurvey()">Llenar
+          otra encuesta</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADMIN BUTTON -->
+  <button class="admin-btn" onclick="openResults()">📊 Ver Resultados</button>
+
+  <!-- RESULTS PANEL -->
+  <div class="results-panel" id="results-panel">
+    <div class="results-inner">
+      <div class="results-header">
+        <h2>📊 Panel de Resultados – Copetran</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="reset-btn" onclick="resetData()">🗑 Reiniciar datos</button>
+          <button class="close-btn" onclick="closeResults()">✕</button>
+        </div>
+      </div>
+      <div class="results-body">
+        <div style="margin-bottom:16px;">
+          <div
+            style="font-size:0.78rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">
+            &#128269; Filtrar por servicio:</div>
+          <div id="filter-row" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        </div>
+        <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+        <div class="tab-row" id="tab-row"></div>
+        <div id="results-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── DATA ─────────────────────────────────────────────────────────────────────
+    const SERVICES = [
+      { id: 'camioneta', label: 'Camioneta Copetran', icon: '🚐' },
+      { id: 'bus', label: 'Bus Intermunicipal', icon: '🚌' },
+      { id: 'tajo', label: 'Servicio de Tajo', icon: '🚚' },
+      { id: 'urbana', label: 'Ruta Urbana', icon: '🚍' },
+      { id: 'poblacion', label: 'Ruta de Población', icon: '🛣️' },
+    ];
+
+    const CONDUCTOR_ITEMS = [
+      'Amabilidad', 'Respeto', 'Aseo personal', 'Porte del uniforme',
+      'Servicio al cliente', 'Puntualidad', 'Conocimiento y experiencia', 'Operación del vehículo'
+    ];
+    const VEHICULO_ITEMS = ['Estado', 'Limpieza', 'Comodidad', 'Mantenimiento', 'Disponibilidad'];
+    const NORMAS_ITEMS = ['Cumplimiento de PARE', 'Manejo preventivo', 'Adelantamientos en zonas permitidas', 'Cumplimiento de los límites de velocidad'];
+
+    const SECTIONS = [
+      { key: 'conductor', label: 'Conductor', items: CONDUCTOR_ITEMS },
+      { key: 'vehiculo', label: 'Vehículo', items: VEHICULO_ITEMS },
+      { key: 'normas', label: 'Normas', items: NORMAS_ITEMS },
+    ];
+
+    // ─── STATE ────────────────────────────────────────────────────────────────────
+    let selectedServices = new Set();
+    let allCharts = [];
+    const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwWoJySqc26Y8DdnsOvJA_ItFTTnDUoF01TMTSDyqCFfYHCdeA1jgsKIYxOQ40D7TuM6Q/exec";
+
+    // ─── IN-MEMORY STORE (no localStorage) ───────────────────────────────────────
+    let _memoryData = { responses: [] };
+
+    function getStoredData() {
+      return _memoryData;
+    }
+    function saveData(d) {
+      _memoryData = d;
+    }
+
+    // ─── SERVICE SELECTION ────────────────────────────────────────────────────────
+    function toggleService(el, id) {
+      if (selectedServices.has(id)) {
+        selectedServices.delete(id);
+        el.classList.remove('selected');
+        el.querySelector('.check').textContent = '';
+      } else {
+        selectedServices.add(id);
+        el.classList.add('selected');
+        el.querySelector('.check').textContent = '✓';
+      }
+    }
+
+    function toggleAll() {
+      const chips = document.querySelectorAll('.service-chip');
+      const allSelected = selectedServices.size === SERVICES.length;
+      selectedServices.clear();
+      chips.forEach(chip => {
+        chip.classList.remove('selected');
+        chip.querySelector('.check').textContent = '';
+      });
+      if (!allSelected) {
+        SERVICES.forEach(s => selectedServices.add(s.id));
+        chips.forEach(chip => {
+          chip.classList.add('selected');
+          chip.querySelector('.check').textContent = '✓';
+        });
+      }
+    }
+
+    // ─── NAVIGATION ───────────────────────────────────────────────────────────────
+    function goToSurvey() {
+      if (selectedServices.size === 0) {
+        document.getElementById('service-error').style.display = 'block';
+        return;
+      }
+      document.getElementById('service-error').style.display = 'none';
+      buildSurveyTables();
+      buildServiceBadges();
+      showPage('page2');
+      window.scrollTo(0, 0);
+    }
+
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function resetSurvey() {
+      selectedServices.clear();
+      document.querySelectorAll('.service-chip').forEach(c => {
+        c.classList.remove('selected');
+        c.querySelector('.check').textContent = '';
+      });
+      document.getElementById('inp_nombre').value = '';
+      document.getElementById('inp_telefono').value = '';
+      document.getElementById('inp_mejoras').value = '';
+      showPage('page1');
+      window.scrollTo(0, 0);
+    }
+
+    // ─── BUILD SINGLE SURVEY FORM ─────────────────────────────────────────────────
+    function buildServiceBadges() {
+      const wrap = document.getElementById('selected-services-badges');
+      wrap.innerHTML = [...selectedServices].map(id => {
+        const svc = SERVICES.find(s => s.id === id);
+        return `<span style="background:#EFF4FC;border:1.5px solid #1565C0;color:#0D3B86;border-radius:20px;padding:4px 12px;font-size:0.8rem;font-weight:700;">${svc.icon} ${svc.label}</span>`;
+      }).join('');
+    }
+
+    function buildSurveyTables() {
+      SECTIONS.forEach(sec => {
+        const tbody = document.getElementById('tbody-' + sec.key);
+        tbody.innerHTML = '';
+        sec.items.forEach((item, ii) => {
+          const name = sec.key + '_' + ii;
+          tbody.innerHTML += `
+        <tr>
+          <td>${item}</td>
+          <td class="td-radio"><div class="radio-wrap radio-bueno">
+            <input type="radio" name="${name}" id="${name}_b" value="bueno">
+            <label for="${name}_b">B</label>
+          </div></td>
+          <td class="td-radio"><div class="radio-wrap radio-regular">
+            <input type="radio" name="${name}" id="${name}_r" value="regular">
+            <label for="${name}_r">R</label>
+          </div></td>
+          <td class="td-radio"><div class="radio-wrap radio-malo">
+            <input type="radio" name="${name}" id="${name}_m" value="malo">
+            <label for="${name}_m">M</label>
+          </div></td>
+        </tr>`;
+        });
+      });
+    }
+
+
+    // ─── SUBMIT ────────────────────────────────────────────────────────────────────
+    function submitSurvey() {
+      // Show loading state
+      const btn = document.querySelector('#page2 .btn-submit');
+      btn.textContent = 'Enviando... ⏳';
+      btn.disabled = true;
+
+      const ratings = {};
+      SECTIONS.forEach(function (sec) {
+        ratings[sec.key] = { ratings: {}, why: '' };
+        sec.items.forEach(function (item, ii) {
+          const name = sec.key + '_' + ii;
+          const checked = document.querySelector('input[name="' + name + '"]:checked');
+          ratings[sec.key].ratings[item] = checked ? checked.value : null;
+        });
+        const whyEl = document.getElementById('why_' + sec.key);
+        ratings[sec.key].why = whyEl ? whyEl.value : '';
+      });
+
+      const entry = {
+        ts: new Date().toISOString(),
+        nombre: document.getElementById('inp_nombre').value || null,
+        telefono: document.getElementById('inp_telefono').value || null,
+        mejoras: document.getElementById('inp_mejoras').value || null,
+        services: [...selectedServices],
+        ratings: ratings
+      };
+
+      // Send to Google Sheets only
+      fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(entry)
+      })
+        .then(() => {
+          showPage('page3');
+          window.scrollTo(0, 0);
+        })
+        .catch(() => {
+          showPage('page3');
+          window.scrollTo(0, 0);
+        })
+        .finally(() => {
+          btn.textContent = 'Enviar Encuesta 🚀';
+          btn.disabled = false;
+        });
+    }
+
+    // ─── RESULTS ───────────────────────────────────────────────────────────────────
+    let currentResultTab = "conductor";
+    let activeServiceFilter = "todos"; // "todos" or a service id
+    let chartInstances = {};
+
+    function openResults() {
+      document.getElementById('results-panel').style.display = 'block';
+      // Show loading
+      document.getElementById('filter-row').innerHTML = '';
+      document.getElementById('tab-row').innerHTML = '';
+      document.getElementById('results-content').innerHTML = `
+    <div style="text-align:center;padding:48px 20px;">
+      <div style="font-size:2.5rem;margin-bottom:12px;">⏳</div>
+      <p style="font-family:Montserrat,sans-serif;font-weight:700;color:#1565C0;">Cargando datos desde Google Sheets...</p>
+    </div>`;
+      // Fetch totals from Google Sheets
+      fetch(SHEETS_URL + '?action=getTotals')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.totals) {
+            _memoryData = { responses: data.responses || [], totals: data.totals };
+          }
+          renderResults();
+        })
+        .catch(() => {
+          // If fetch fails show what we have in memory
+          renderResults();
+        });
+    }
+    function closeResults() {
+      document.getElementById('results-panel').style.display = 'none';
+    }
+
+    function setServiceFilter(svcId) {
+      activeServiceFilter = svcId;
+      Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) { } });
+      chartInstances = {};
+      renderResults();
+    }
+
+    function renderResults() {
+      const data = getStoredData();
+      const allResponses = data.responses || [];
+
+      // Build filter chips from services that actually appear in responses
+      const usedServices = new Set();
+      allResponses.forEach(entry => {
+        (entry.services || []).forEach(s => usedServices.add(s));
+      });
+
+      const filterRow = document.getElementById('filter-row');
+      const allActive = activeServiceFilter === 'todos';
+      let filterHtml = `<button onclick="setServiceFilter('todos')" style="padding:6px 14px;border-radius:20px;border:2px solid #1565C0;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;background:${allActive ? '#1565C0' : 'white'};color:${allActive ? 'white' : '#1565C0'};">🌐 Todos</button>`;
+      SERVICES.forEach(svc => {
+        if (!usedServices.has(svc.id)) return;
+        const active = activeServiceFilter === svc.id;
+        filterHtml += `<button onclick="setServiceFilter('${svc.id}')" style="padding:6px 14px;border-radius:20px;border:2px solid #1565C0;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;background:${active ? '#1565C0' : 'white'};color:${active ? 'white' : '#1565C0'};">${svc.icon} ${svc.label}</button>`;
+      });
+      filterRow.innerHTML = filterHtml;
+
+      // Filter responses by selected service
+      const responses = activeServiceFilter === 'todos'
+        ? allResponses
+        : allResponses.filter(entry => (entry.services || []).includes(activeServiceFilter));
+
+      // Build aggregated totals
+      const totals = {};
+      SECTIONS.forEach(sec => {
+        totals[sec.key] = {};
+        sec.items.forEach(item => {
+          totals[sec.key][item] = { bueno: 0, regular: 0, malo: 0 };
+        });
+      });
+
+      responses.forEach(entry => {
+        const ratingsData = entry.ratings || null;
+        if (ratingsData) {
+          SECTIONS.forEach(sec => {
+            const sData = ratingsData[sec.key];
+            if (!sData) return;
+            sec.items.forEach(item => {
+              const val = sData.ratings[item];
+              if (val && totals[sec.key][item][val] !== undefined) {
+                totals[sec.key][item][val]++;
+              }
+            });
+          });
+        }
+      });
+
+      // Tabs
+      const tabRow = document.getElementById('tab-row');
+      tabRow.innerHTML = SECTIONS.map(sec => `
+    <button class="tab-btn ${sec.key === currentResultTab ? 'active' : ''}" onclick="switchTab('${sec.key}')">
+      ${sec.label}
+    </button>
+  `).join('') + `<button class="tab-btn ${currentResultTab === 'resumen' ? 'active' : ''}" onclick="switchTab('resumen')">Resumen</button>`;
+
+      const filterLabel = activeServiceFilter === 'todos' ? 'todos los servicios' : (SERVICES.find(s => s.id === activeServiceFilter) || {}).label;
+      renderTab(currentResultTab, totals, responses.length, filterLabel);
+    }
+
+    function switchTab(key) {
+      currentResultTab = key;
+      // Destroy all charts before re-render
+      Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) { } });
+      chartInstances = {};
+      renderResults();
+    }
+
+    function renderTab(tabKey, totals, totalResponses, filterLabel) {
+      const content = document.getElementById('results-content');
+
+      if (tabKey === 'resumen') {
+        renderResumen(content, totals, totalResponses, filterLabel);
+        return;
+      }
+      filterLabel = filterLabel || 'todos los servicios';
+
+      const sec = SECTIONS.find(s => s.key === tabKey);
+      const secData = totals[tabKey];
+      const filteredLabel = filterLabel || 'todos los servicios';
+      let totalB = 0, totalR = 0, totalM = 0;
+      sec.items.forEach(item => {
+        totalB += secData[item].bueno;
+        totalR += secData[item].regular;
+        totalM += secData[item].malo;
+      });
+      const grandTotal = totalB + totalR + totalM;
+
+      let html = `
+    <p style="font-size:0.82rem;color:#1565C0;font-weight:700;margin-bottom:12px;">📌 Servicio: ${filteredLabel} &nbsp;·&nbsp; <span style="color:#374151;">${totalResponses} respuestas</span></p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val green">${totalB}</div><div class="lbl">Bueno</div></div>
+      <div class="stat-card"><div class="val yellow">${totalR}</div><div class="lbl">Regular</div></div>
+      <div class="stat-card"><div class="val red">${totalM}</div><div class="lbl">Malo</div></div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Aspecto</th>
+          <th>Bueno</th>
+          <th>Regular</th>
+          <th>Malo</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+      sec.items.forEach(item => {
+        const d = secData[item];
+        const t = d.bueno + d.regular + d.malo;
+        html += `<tr>
+      <td>${item}</td>
+      <td class="num bueno">${d.bueno}</td>
+      <td class="num regular">${d.regular}</td>
+      <td class="num malo">${d.malo}</td>
+      <td class="num">${t}</td>
+    </tr>`;
+      });
+
+      html += `</tbody></table>
+    <div class="charts-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px;align-items:center;">
+      <div>
+        <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;margin-bottom:10px;text-align:center;">Distribución General</div>
+        <div style="position:relative;height:220px;"><canvas id="chart_donut_${tabKey}"></canvas></div>
+      </div>
+      <div>
+        <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;margin-bottom:10px;text-align:center;">Por Aspecto</div>
+        <div style="position:relative;height:220px;"><canvas id="chart_bar_${tabKey}"></canvas></div>
+      </div>
+    </div>`;
+
+      content.innerHTML = html;
+
+      // ── DONUT CHART ──────────────────────────────────────────────────────────────
+      const ctxDonut = document.getElementById(`chart_donut_${tabKey}`).getContext('2d');
+      chartInstances[`donut_${tabKey}`] = new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+          labels: ['Bueno', 'Regular', 'Malo'],
+          datasets: [{
+            data: [totalB, totalR, totalM],
+            backgroundColor: ['#16a34a', '#d97706', '#dc2626'],
+            borderWidth: 3,
+            borderColor: '#fff',
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { font: { size: 11, weight: 'bold' }, padding: 14, usePointStyle: true }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => {
+                  const total = ctx.dataset.data.reduce((a, b) => a + b, 0) || 1;
+                  const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                  return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // ── BAR CHART ────────────────────────────────────────────────────────────────
+      const labels = sec.items.map(i => i.length > 14 ? i.substring(0, 14) + '…' : i);
+      const bData = sec.items.map(i => secData[i].bueno);
+      const rData = sec.items.map(i => secData[i].regular);
+      const mData = sec.items.map(i => secData[i].malo);
+
+      const ctxBar = document.getElementById(`chart_bar_${tabKey}`).getContext('2d');
+      chartInstances[`bar_${tabKey}`] = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Bueno', data: bData, backgroundColor: 'rgba(22,163,74,0.85)', borderRadius: 4, borderSkipped: false },
+            { label: 'Regular', data: rData, backgroundColor: 'rgba(217,119,6,0.85)', borderRadius: 4, borderSkipped: false },
+            { label: 'Malo', data: mData, backgroundColor: 'rgba(220,38,38,0.85)', borderRadius: 4, borderSkipped: false },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 11, weight: 'bold' }, padding: 12, usePointStyle: true } },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            x: { ticks: { font: { size: 9 }, maxRotation: 35 }, grid: { display: false } },
+            y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } }
+          }
+        }
+      });
+    }
+
+    function renderResumen(content, totals, totalResponses, filterLabel) {
+      filterLabel = filterLabel || 'todos los servicios';
+      let html = `<p style="margin-bottom:20px;font-size:0.9rem;color:#374151;">
+    <strong>Respuestas:</strong> <span class="badge-total">${totalResponses}</span>
+    &nbsp;|&nbsp; <span style="color:#1565C0;font-weight:700;">Servicio: ${filterLabel}</span>
+  </p>`;
+
+      SECTIONS.forEach(sec => {
+        let b = 0, r = 0, m = 0;
+        sec.items.forEach(item => {
+          b += totals[sec.key][item].bueno;
+          r += totals[sec.key][item].regular;
+          m += totals[sec.key][item].malo;
+        });
+        html += `
+      <div class="results-section">
+        <h3>${sec.label}</h3>
+        <div class="stats-row">
+          <div class="stat-card"><div class="val green">${b}</div><div class="lbl">Bueno</div></div>
+          <div class="stat-card"><div class="val yellow">${r}</div><div class="lbl">Regular</div></div>
+          <div class="stat-card"><div class="val red">${m}</div><div class="lbl">Malo</div></div>
+        </div>
+        <div class="charts-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;align-items:center;">
+          <div>
+            <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;margin-bottom:8px;text-align:center;">Distribución</div>
+            <div style="position:relative;height:200px;"><canvas id="chart_donut_res_${sec.key}"></canvas></div>
+          </div>
+          <div>
+            <div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;margin-bottom:8px;text-align:center;">Por Aspecto</div>
+            <div style="position:relative;height:200px;"><canvas id="chart_bar_res_${sec.key}"></canvas></div>
+          </div>
+        </div>
+      </div>`;
+      });
+
+      content.innerHTML = html;
+
+      SECTIONS.forEach(sec => {
+        let b = 0, r = 0, m = 0;
+        sec.items.forEach(item => {
+          b += totals[sec.key][item].bueno;
+          r += totals[sec.key][item].regular;
+          m += totals[sec.key][item].malo;
+        });
+
+        // Donut
+        const ctxD = document.getElementById(`chart_donut_res_${sec.key}`).getContext('2d');
+        chartInstances[`donut_res_${sec.key}`] = new Chart(ctxD, {
+          type: 'doughnut',
+          data: {
+            labels: ['Bueno', 'Regular', 'Malo'],
+            datasets: [{ data: [b, r, m], backgroundColor: ['#16a34a', '#d97706', '#dc2626'], borderWidth: 3, borderColor: '#fff', hoverOffset: 6 }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false, cutout: '62%',
+            plugins: {
+              legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 10, usePointStyle: true } },
+              tooltip: { callbacks: { label: ctx => { const t = ctx.dataset.data.reduce((a, b) => a + b, 0) || 1; return ` ${ctx.label}: ${ctx.parsed} (${((ctx.parsed / t) * 100).toFixed(1)}%)`; } } }
+            }
+          }
+        });
+
+        // Bar
+        const labelsB = sec.items.map(i => i.length > 14 ? i.substring(0, 14) + '…' : i);
+        const ctxB = document.getElementById(`chart_bar_res_${sec.key}`).getContext('2d');
+        chartInstances[`bar_res_${sec.key}`] = new Chart(ctxB, {
+          type: 'bar',
+          data: {
+            labels: labelsB,
+            datasets: [
+              { label: 'Bueno', data: sec.items.map(i => totals[sec.key][i].bueno), backgroundColor: 'rgba(22,163,74,0.85)', borderRadius: 4, borderSkipped: false },
+              { label: 'Regular', data: sec.items.map(i => totals[sec.key][i].regular), backgroundColor: 'rgba(217,119,6,0.85)', borderRadius: 4, borderSkipped: false },
+              { label: 'Malo', data: sec.items.map(i => totals[sec.key][i].malo), backgroundColor: 'rgba(220,38,38,0.85)', borderRadius: 4, borderSkipped: false },
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 10, usePointStyle: true } }, tooltip: { mode: 'index', intersect: false } },
+            scales: { x: { ticks: { font: { size: 9 }, maxRotation: 35 }, grid: { display: false } }, y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
+          }
+        });
+      });
+    }
+
+    function resetData() {
+      // Custom modal
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+      overlay.innerHTML = `
+    <div style="background:white;border-radius:16px;padding:32px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:3rem;margin-bottom:12px;">⚠️</div>
+      <h3 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:1.2rem;color:#1A1A2E;margin-bottom:10px;">¿Eliminar todos los datos?</h3>
+      <p style="font-size:0.88rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">Esta acción borrará <strong>todos los registros</strong> del historial local. Esta acción <strong>no se puede deshacer</strong>.</p>
+      <div style="display:flex;gap:10px;">
+        <button id="modal-cancel" style="flex:1;padding:12px;border:2px solid #E5E7EB;border-radius:10px;background:white;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;color:#374151;">Cancelar</button>
+        <button id="modal-confirm" style="flex:1;padding:12px;border:none;border-radius:10px;background:#dc2626;color:white;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;">Sí, eliminar</button>
+      </div>
+    </div>`;
+      document.body.appendChild(overlay);
+
+      document.getElementById('modal-cancel').onclick = () => overlay.remove();
+      document.getElementById('modal-confirm').onclick = () => {
+        overlay.remove();
+        const confirmBtn = document.getElementById('modal-confirm');
+        confirmBtn.textContent = 'Eliminando...';
+        confirmBtn.disabled = true;
+        fetch(SHEETS_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'reset' })
+        })
+          .finally(() => {
+            _memoryData = { responses: [] };
+            Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch (e) { } });
+            chartInstances = {};
+            activeServiceFilter = 'todos';
+            renderResults();
+          });
+      };
+    }
+
+    // Close panel clicking outside
+    document.getElementById('results-panel').addEventListener('click', function (e) {
+      if (e.target === this) closeResults();
+    });
+  </script>
+</body>
+
+</html>
