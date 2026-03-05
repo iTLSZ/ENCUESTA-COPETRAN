@@ -1350,9 +1350,60 @@
     let activeServiceFilter = "todos"; // "todos" or a service id
     let chartInstances = {};
 
+    const ADMIN_PASS = '1234';
+    let isAuthenticated = false;
+
     function openResults() {
+      if (isAuthenticated) {
+        loadResults();
+        return;
+      }
+      // Show password modal
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+      overlay.innerHTML = `
+        <div style="background:white;border-radius:16px;padding:32px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+          <div style="font-size:2.5rem;margin-bottom:12px;">🔒</div>
+          <h3 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:1.1rem;color:#1A1A2E;margin-bottom:6px;">Acceso Restringido</h3>
+          <p style="font-size:0.85rem;color:#6b7280;margin-bottom:20px;">Ingrese la contraseña para ver los resultados.</p>
+          <input type="password" id="admin-pass-input" placeholder="Contraseña" style="width:100%;border:2px solid #E5E7EB;border-radius:10px;padding:12px 16px;font-family:Inter,sans-serif;font-size:1rem;text-align:center;outline:none;margin-bottom:8px;letter-spacing:4px;" autofocus>
+          <div id="pass-error" style="color:#dc2626;font-size:0.8rem;margin-bottom:12px;display:none;">Contraseña incorrecta</div>
+          <div style="display:flex;gap:10px;">
+            <button id="pass-cancel" style="flex:1;padding:12px;border:2px solid #E5E7EB;border-radius:10px;background:white;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;color:#374151;">Cancelar</button>
+            <button id="pass-submit" style="flex:1;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#0D3B86,#1976D2);color:white;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;">Ingresar</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+
+      const passInput = document.getElementById('admin-pass-input');
+      const passError = document.getElementById('pass-error');
+
+      function tryLogin() {
+        if (passInput.value === ADMIN_PASS) {
+          isAuthenticated = true;
+          overlay.remove();
+          loadResults();
+        } else {
+          passError.style.display = 'block';
+          passInput.style.borderColor = '#dc2626';
+          passInput.value = '';
+          passInput.focus();
+        }
+      }
+
+      document.getElementById('pass-submit').onclick = tryLogin;
+      document.getElementById('pass-cancel').onclick = () => overlay.remove();
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryLogin(); });
+      passInput.addEventListener('input', () => {
+        passError.style.display = 'none';
+        passInput.style.borderColor = '#E5E7EB';
+      });
+      setTimeout(() => passInput.focus(), 100);
+    }
+
+    function loadResults() {
       document.getElementById('results-panel').style.display = 'block';
-      // Show loading
       document.getElementById('filter-row').innerHTML = '';
       document.getElementById('tab-row').innerHTML = '';
       document.getElementById('results-content').innerHTML = `
@@ -1360,7 +1411,6 @@
       <div style="font-size:2.5rem;margin-bottom:12px;">⏳</div>
       <p style="font-family:Montserrat,sans-serif;font-weight:700;color:#1565C0;">Cargando datos desde Google Sheets...</p>
     </div>`;
-      // Fetch totals from Google Sheets
       fetch(SHEETS_URL + '?action=getTotals')
         .then(r => r.json())
         .then(data => {
@@ -1370,7 +1420,6 @@
           renderResults();
         })
         .catch(() => {
-          // If fetch fails show what we have in memory
           renderResults();
         });
     }
