@@ -755,18 +755,197 @@
     }
 
     @media(max-width:600px) {
-      .stats-row {
-        grid-template-columns: 1fr 1fr;
+      .header {
+        padding: 20px 16px 28px;
+      }
+
+      .header-logo {
+        font-size: 1.6rem;
+      }
+
+      .header-sub {
+        font-size: 0.75rem;
+      }
+
+      .container {
+        padding: 16px 10px 40px;
+      }
+
+      .card {
+        padding: 20px 16px;
+        margin-bottom: 14px;
+      }
+
+      .card-title {
+        font-size: 0.88rem;
+      }
+
+      .intro-text {
+        font-size: 0.85rem;
+        padding: 12px;
+      }
+
+      .service-block-header {
+        padding: 12px 14px;
+        font-size: 0.85rem;
+      }
+
+      .service-block-body {
+        padding: 14px;
+      }
+
+      .btn-submit {
+        padding: 14px;
+        font-size: 0.9rem;
+      }
+
+      /* Rating table responsive */
+      .rating-table {
+        font-size: 0.8rem;
+      }
+
+      .rating-table thead th {
+        padding: 6px 4px;
+        font-size: 0.68rem;
+      }
+
+      .rating-table tbody td {
+        padding: 8px 4px;
+      }
+
+      .rating-table tbody td:first-child {
+        font-size: 0.78rem;
+        max-width: 120px;
+        word-wrap: break-word;
+      }
+
+      .radio-wrap label {
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+      }
+
+      /* Results panel responsive */
+      .results-panel {
+        padding: 0;
+      }
+
+      .results-inner {
+        border-radius: 0;
+        min-height: 100vh;
+      }
+
+      .results-header {
+        padding: 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .results-header h2 {
+        font-size: 0.95rem;
       }
 
       .results-body {
-        padding: 16px;
+        padding: 14px;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+      }
+
+      .stat-card {
+        padding: 10px 6px;
+      }
+
+      .stat-card .val {
+        font-size: 1.3rem;
+      }
+
+      .stat-card .lbl {
+        font-size: 0.68rem;
+      }
+
+      /* Tab buttons */
+      .tab-row {
+        gap: 6px;
+      }
+
+      .tab-btn {
+        padding: 6px 10px;
+        font-size: 0.75rem;
+      }
+
+      /* Data table scrollable */
+      .data-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.8rem;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 8px 10px;
+        white-space: nowrap;
+      }
+
+      /* Charts stack vertically */
+      .charts-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+
+      /* Admin button */
+      .admin-btn {
+        bottom: 12px;
+        right: 12px;
+        padding: 8px 14px;
+        font-size: 0.72rem;
+      }
+
+      /* Reset button */
+      .reset-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+      }
+
+      .close-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+
+      /* Filter chips */
+      #filter-row {
+        gap: 6px !important;
+      }
+
+      #filter-row button {
+        font-size: 0.72rem !important;
+        padding: 5px 10px !important;
       }
     }
 
-    @media(max-width:550px) {
-      .charts-grid {
-        grid-template-columns: 1fr !important;
+    @media(max-width:400px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .stat-card .val {
+        font-size: 1.1rem;
+      }
+
+      .results-header h2 {
+        font-size: 0.85rem;
+      }
+
+      .rating-table tbody td:first-child {
+        max-width: 90px;
       }
     }
   </style>
