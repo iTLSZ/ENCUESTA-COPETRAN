@@ -982,12 +982,12 @@
         <div class="card-title">Seleccione los servicios a evaluar</div>
         <button class="select-all-btn" onclick="toggleAll()">✓ Seleccionar todos</button>
         <div class="services-grid">
-          <div class="service-chip" onclick="toggleService(this,'camioneta')">
+          <div class="service-chip" onclick="toggleService(this,'supervisores')">
             <span class="service-icon">🚐</span>
             <div>
               <div class="check"></div>
             </div>
-            <span>Camioneta Copetran</span>
+            <span>Servicio Supervisores</span>
           </div>
           <div class="service-chip" onclick="toggleService(this,'bus')">
             <span class="service-icon">🚌</span>
@@ -997,7 +997,7 @@
             <span>Bus Intermunicipal</span>
           </div>
           <div class="service-chip" onclick="toggleService(this,'tajo')">
-            <span class="service-icon">🚚</span>
+            <span class="service-icon">�</span>
             <div>
               <div class="check"></div>
             </div>
@@ -1164,9 +1164,9 @@
   <script>
     // ─── DATA ─────────────────────────────────────────────────────────────────────
     const SERVICES = [
-      { id: 'camioneta', label: 'Camioneta Copetran', icon: '🚐' },
+      { id: 'supervisores', label: 'Servicio Supervisores', icon: '🚐' },
       { id: 'bus', label: 'Bus Intermunicipal', icon: '🚌' },
-      { id: 'tajo', label: 'Servicio de Tajo', icon: '🚚' },
+      { id: 'tajo', label: 'Servicio de Tajo', icon: '�' },
       { id: 'urbana', label: 'Ruta Urbana', icon: '🚍' },
       { id: 'poblacion', label: 'Ruta de Población', icon: '🛣️' },
     ];
