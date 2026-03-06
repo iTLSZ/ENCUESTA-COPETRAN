@@ -41,11 +41,18 @@
       color: var(--dark);
     }
 
+    @media(min-width: 701px) {
+      body.no-scroll-pc {
+        overflow: hidden;
+        height: 100vh;
+      }
+    }
+
     /* HEADER */
     .header {
       background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 60%, var(--red-light) 100%);
       color: white;
-      padding: 28px 24px 36px;
+      padding: 18px 24px 22px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -95,9 +102,68 @@
 
     /* CONTAINER */
     .container {
-      max-width: 700px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 24px 16px 48px;
+      padding: 12px 16px 8px;
+    }
+
+    .page1-row {
+      display: flex;
+      gap: 20px;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .page1-row>.card {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media(min-width: 701px) {
+      #page1.active {
+        min-height: calc(100vh - 160px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+    .footer {
+      background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 60%, var(--red-light) 100%);
+      color: white;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .footer a {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @media(max-width: 700px) {
+      .page1-row {
+        flex-direction: column;
+      }
+
+      .btn-continuar-pc {
+        display: none !important;
+      }
+    }
+
+    @media(min-width: 701px) {
+      .btn-continuar-mobile {
+        display: none !important;
+      }
+    }
+
+    @media(min-width: 701px) {
+      .page1-row .services-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* CARD */
@@ -898,10 +964,7 @@
 
       /* Admin button */
       .admin-btn {
-        bottom: 12px;
-        right: 12px;
-        padding: 8px 14px;
-        font-size: 0.72rem;
+        display: none;
       }
 
       /* Reset button */
@@ -963,66 +1026,71 @@
 
     <!-- PAGE 1: Info + Service Selection -->
     <div class="page active" id="page1">
-      <div class="card">
-        <p class="intro-text">
-          Para nosotros es importante su opinión en cuanto a la <strong>satisfacción de nuestro servicio</strong>. Le
-          invitamos a responder las siguientes preguntas. Su respuesta es confidencial y voluntaria.
-        </p>
-        <div class="form-row">
-          <label>Nombre <span class="opt">(opcional)</span></label>
-          <input type="text" id="inp_nombre" placeholder="Su nombre">
+      <div class="page1-row">
+        <div class="card" style="display:flex;flex-direction:column;justify-content:center;">
+          <p class="intro-text">
+            Para nosotros es importante su opinión en cuanto a la <strong>satisfacción de nuestro servicio</strong>. Le
+            invitamos a responder las siguientes preguntas. Su respuesta es confidencial y voluntaria.
+          </p>
+          <div class="form-row">
+            <label>Nombre <span class="opt">(opcional)</span></label>
+            <input type="text" id="inp_nombre" placeholder="Su nombre">
+          </div>
+          <div class="form-row">
+            <label>Teléfono <span class="opt">(opcional)</span></label>
+            <input type="tel" id="inp_telefono" placeholder="Su número de teléfono">
+          </div>
+          <button class="btn-submit btn-continuar-pc" onclick="goToSurvey()" style="margin-top:16px;">Continuar
+            →</button>
         </div>
-        <div class="form-row">
-          <label>Teléfono <span class="opt">(opcional)</span></label>
-          <input type="tel" id="inp_telefono" placeholder="Su número de teléfono">
-        </div>
-      </div>
 
-      <div class="card">
-        <div class="card-title">Seleccione los servicios a evaluar</div>
-        <button class="select-all-btn" onclick="toggleAll()">✓ Seleccionar todos</button>
-        <div class="services-grid">
-          <div class="service-chip" onclick="toggleService(this,'supervisores')">
-            <span class="service-icon">🚐</span>
-            <div>
-              <div class="check"></div>
+        <div class="card" style="text-align:center;">
+          <div class="card-title" style="justify-content:center;">Seleccione los servicios a evaluar</div>
+          <button class="select-all-btn" onclick="toggleAll()"
+            style="margin-left:auto;margin-right:auto;width:100%;display:block;">✓ Seleccionar
+            todos</button>
+          <div class="services-grid">
+            <div class="service-chip" onclick="toggleService(this,'supervisores')">
+              <span class="service-icon">🚐</span>
+              <div>
+                <div class="check"></div>
+              </div>
+              <span>Servicio Supervisores</span>
             </div>
-            <span>Servicio Supervisores</span>
-          </div>
-          <div class="service-chip" onclick="toggleService(this,'bus')">
-            <span class="service-icon">🚌</span>
-            <div>
-              <div class="check"></div>
+            <div class="service-chip" onclick="toggleService(this,'bus')">
+              <span class="service-icon">🚌</span>
+              <div>
+                <div class="check"></div>
+              </div>
+              <span>Bus Intermunicipal</span>
             </div>
-            <span>Bus Intermunicipal</span>
-          </div>
-          <div class="service-chip" onclick="toggleService(this,'tajo')">
-            <span class="service-icon">�</span>
-            <div>
-              <div class="check"></div>
+            <div class="service-chip" onclick="toggleService(this,'tajo')">
+              <span class="service-icon">&#x1F68E;</span>
+              <div>
+                <div class="check"></div>
+              </div>
+              <span>Servicio de Tajo</span>
             </div>
-            <span>Servicio de Tajo</span>
-          </div>
-          <div class="service-chip" onclick="toggleService(this,'urbana')">
-            <span class="service-icon">🚍</span>
-            <div>
-              <div class="check"></div>
+            <div class="service-chip" onclick="toggleService(this,'urbana')">
+              <span class="service-icon">🚍</span>
+              <div>
+                <div class="check"></div>
+              </div>
+              <span>Ruta Urbana</span>
             </div>
-            <span>Ruta Urbana</span>
-          </div>
-          <div class="service-chip" onclick="toggleService(this,'poblacion')">
-            <span class="service-icon">🛣️</span>
-            <div>
-              <div class="check"></div>
+            <div class="service-chip" onclick="toggleService(this,'poblacion')">
+              <span class="service-icon">🛣️</span>
+              <div>
+                <div class="check"></div>
+              </div>
+              <span>Ruta de Población</span>
             </div>
-            <span>Ruta de Población</span>
           </div>
+          <div id="service-error" style="color:#dc2626;font-size:0.82rem;display:none;margin-top:4px;">Por favor
+            seleccione al menos un servicio.</div>
         </div>
-        <div id="service-error" style="color:#dc2626;font-size:0.82rem;display:none;margin-top:4px;">Por favor
-          seleccione al menos un servicio.</div>
-      </div>
-
-      <button class="btn-submit" onclick="goToSurvey()">Continuar →</button>
+      </div><!-- end page1-row -->
+      <button class="btn-submit btn-continuar-mobile" onclick="goToSurvey()">Continuar →</button>
     </div>
 
     <!-- PAGE 2: The survey questions (ONE form for all selected services) -->
@@ -1166,7 +1234,7 @@
     const SERVICES = [
       { id: 'supervisores', label: 'Servicio Supervisores', icon: '🚐' },
       { id: 'bus', label: 'Bus Intermunicipal', icon: '🚌' },
-      { id: 'tajo', label: 'Servicio de Tajo', icon: '�' },
+      { id: 'tajo', label: 'Servicio de Tajo', icon: '&#x1F68E;' },
       { id: 'urbana', label: 'Ruta Urbana', icon: '🚍' },
       { id: 'poblacion', label: 'Ruta de Población', icon: '🛣️' },
     ];
@@ -1245,6 +1313,16 @@
     function showPage(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      if (id === 'page1' && window.innerWidth > 700) {
+        document.body.classList.add('no-scroll-pc');
+      } else {
+        document.body.classList.remove('no-scroll-pc');
+      }
+    }
+
+    // Set initial no-scroll on PC
+    if (window.innerWidth > 700) {
+      document.body.classList.add('no-scroll-pc');
     }
 
     function resetSurvey() {
@@ -1835,6 +1913,10 @@
       if (e.target === this) closeResults();
     });
   </script>
+
+  <footer class="footer">
+    &copy; 2026 Copetran S.A. — Todos los derechos reservados
+  </footer>
 </body>
 
 </html>
