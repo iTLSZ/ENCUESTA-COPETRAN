@@ -107,7 +107,7 @@
     .container {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 12px 16px 8px;
+      padding: 12px 16px 50px;
     }
 
     .page1-row {
@@ -123,12 +123,21 @@
     }
 
     @media(min-width: 701px) {
-      #page1.active {
+
+      #page1.active,
+      #page3.active {
         min-height: calc(100vh - 160px);
         display: flex;
         flex-direction: column;
         justify-content: center;
       }
+    }
+
+    #page3.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: calc(100vh - 160px);
     }
 
     .footer {
@@ -139,6 +148,11 @@
       font-size: 0.8rem;
       font-weight: 500;
       letter-spacing: 0.5px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
     }
 
     .footer a {
@@ -1316,7 +1330,7 @@
     function showPage(id) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      if (id === 'page1' && window.innerWidth > 700) {
+      if ((id === 'page1' || id === 'page3') && window.innerWidth > 700) {
         document.body.classList.add('no-scroll-pc');
       } else {
         document.body.classList.remove('no-scroll-pc');
@@ -1379,6 +1393,34 @@
 
     // ─── SUBMIT ────────────────────────────────────────────────────────────────────
     function submitSurvey() {
+      // Validate all ratings are filled
+      let missing = [];
+      SECTIONS.forEach(function (sec) {
+        sec.items.forEach(function (item, ii) {
+          const name = sec.key + '_' + ii;
+          const checked = document.querySelector('input[name="' + name + '"]:checked');
+          if (!checked) {
+            missing.push(sec.label + ': ' + item);
+          }
+        });
+      });
+
+      if (missing.length > 0) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+        overlay.innerHTML = `
+          <div style="background:white;border-radius:16px;padding:32px;max-width:380px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="font-size:3rem;margin-bottom:12px;">⚠️</div>
+            <h3 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:1.1rem;color:#1A1A2E;margin-bottom:10px;">Campos incompletos</h3>
+            <p style="font-size:0.88rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">Debe llenar <strong>todos los campos</strong> de la encuesta para poder enviar.</p>
+            <button id="modal-ok-btn" style="width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#0D3B86,#1976D2);color:white;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;">Entendido</button>
+          </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById('modal-ok-btn').onclick = () => overlay.remove();
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+        return;
+      }
+
       // Show loading state
       const btn = document.querySelector('#page2 .btn-submit');
       btn.textContent = 'Enviando... ⏳';
