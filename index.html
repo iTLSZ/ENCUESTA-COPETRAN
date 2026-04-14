@@ -1644,13 +1644,14 @@
         totalM += secData[item].malo;
       });
       const grandTotal = totalB + totalR + totalM;
+      const getPct = (val, tot) => tot > 0 ? ((val/tot)*100).toFixed(1) + '%' : '0%';
 
       let html = `
     <p style="font-size:0.82rem;color:#1565C0;font-weight:700;margin-bottom:12px;">📌 Servicio: ${filteredLabel} &nbsp;·&nbsp; <span style="color:#374151;">${totalResponses} respuestas</span></p>
     <div class="stats-row">
-      <div class="stat-card"><div class="val green">${totalB}</div><div class="lbl">Bueno</div></div>
-      <div class="stat-card"><div class="val yellow">${totalR}</div><div class="lbl">Regular</div></div>
-      <div class="stat-card"><div class="val red">${totalM}</div><div class="lbl">Malo</div></div>
+      <div class="stat-card"><div class="val green">${getPct(totalB, grandTotal)}</div><div class="lbl">Bueno</div></div>
+      <div class="stat-card"><div class="val yellow">${getPct(totalR, grandTotal)}</div><div class="lbl">Regular</div></div>
+      <div class="stat-card"><div class="val red">${getPct(totalM, grandTotal)}</div><div class="lbl">Malo</div></div>
     </div>
     <table class="data-table">
       <thead>
@@ -1669,9 +1670,9 @@
         const t = d.bueno + d.regular + d.malo;
         html += `<tr>
       <td>${item}</td>
-      <td class="num bueno">${d.bueno}</td>
-      <td class="num regular">${d.regular}</td>
-      <td class="num malo">${d.malo}</td>
+      <td class="num bueno">${getPct(d.bueno, t)}</td>
+      <td class="num regular">${getPct(d.regular, t)}</td>
+      <td class="num malo">${getPct(d.malo, t)}</td>
       <td class="num">${t}</td>
     </tr>`;
       });
@@ -1747,9 +1748,9 @@
 
       // ── BAR CHART ────────────────────────────────────────────────────────────────
       const labels = sec.items.map(i => i.length > 14 ? i.substring(0, 14) + '…' : i);
-      const bData = sec.items.map(i => secData[i].bueno);
-      const rData = sec.items.map(i => secData[i].regular);
-      const mData = sec.items.map(i => secData[i].malo);
+      const bData = sec.items.map(i => { const t = secData[i].bueno + secData[i].regular + secData[i].malo; return t > 0 ? ((secData[i].bueno/t)*100).toFixed(1) : 0; });
+      const rData = sec.items.map(i => { const t = secData[i].bueno + secData[i].regular + secData[i].malo; return t > 0 ? ((secData[i].regular/t)*100).toFixed(1) : 0; });
+      const mData = sec.items.map(i => { const t = secData[i].bueno + secData[i].regular + secData[i].malo; return t > 0 ? ((secData[i].malo/t)*100).toFixed(1) : 0; });
 
       const ctxBar = document.getElementById(`chart_bar_${tabKey}`).getContext('2d');
       chartInstances[`bar_${tabKey}`] = new Chart(ctxBar, {
@@ -1767,11 +1768,19 @@
           maintainAspectRatio: false,
           plugins: {
             legend: { position: 'bottom', labels: { font: { size: 11, weight: 'bold' }, padding: 12, usePointStyle: true } },
-            tooltip: { mode: 'index', intersect: false }
+            tooltip: { 
+              mode: 'index', 
+              intersect: false,
+              callbacks: {
+                label: function(ctx) {
+                  return ` ${ctx.dataset.label}: ${ctx.parsed.y}%`;
+                }
+              }
+            }
           },
           scales: {
             x: { ticks: { font: { size: 9 }, maxRotation: 35 }, grid: { display: false } },
-            y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } }
+            y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: function(value) { return value + '%'; } }, grid: { color: 'rgba(0,0,0,0.05)' } }
           }
         }
       });
@@ -1832,6 +1841,7 @@
     &nbsp;|&nbsp; <span style="color:#1565C0;font-weight:700;">Servicio: ${filterLabel}</span>
   </p>`;
 
+      const getPct = (val, tot) => tot > 0 ? ((val/tot)*100).toFixed(1) + '%' : '0%';
       SECTIONS.forEach(sec => {
         let b = 0, r = 0, m = 0;
         sec.items.forEach(item => {
@@ -1839,13 +1849,14 @@
           r += totals[sec.key][item].regular;
           m += totals[sec.key][item].malo;
         });
+        const gt = b + r + m;
         html += `
       <div class="results-section">
         <h3>${sec.label}</h3>
         <div class="stats-row">
-          <div class="stat-card"><div class="val green">${b}</div><div class="lbl">Bueno</div></div>
-          <div class="stat-card"><div class="val yellow">${r}</div><div class="lbl">Regular</div></div>
-          <div class="stat-card"><div class="val red">${m}</div><div class="lbl">Malo</div></div>
+          <div class="stat-card"><div class="val green">${getPct(b, gt)}</div><div class="lbl">Bueno</div></div>
+          <div class="stat-card"><div class="val yellow">${getPct(r, gt)}</div><div class="lbl">Regular</div></div>
+          <div class="stat-card"><div class="val red">${getPct(m, gt)}</div><div class="lbl">Malo</div></div>
         </div>
         <div class="charts-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px;align-items:center;">
           <div>
@@ -1895,15 +1906,29 @@
           data: {
             labels: labelsB,
             datasets: [
-              { label: 'Bueno', data: sec.items.map(i => totals[sec.key][i].bueno), backgroundColor: 'rgba(22,163,74,0.85)', borderRadius: 4, borderSkipped: false },
-              { label: 'Regular', data: sec.items.map(i => totals[sec.key][i].regular), backgroundColor: 'rgba(217,119,6,0.85)', borderRadius: 4, borderSkipped: false },
-              { label: 'Malo', data: sec.items.map(i => totals[sec.key][i].malo), backgroundColor: 'rgba(220,38,38,0.85)', borderRadius: 4, borderSkipped: false },
+              { label: 'Bueno', data: sec.items.map(i => { const t = totals[sec.key][i].bueno + totals[sec.key][i].regular + totals[sec.key][i].malo; return t > 0 ? ((totals[sec.key][i].bueno/t)*100).toFixed(1) : 0; }), backgroundColor: 'rgba(22,163,74,0.85)', borderRadius: 4, borderSkipped: false },
+              { label: 'Regular', data: sec.items.map(i => { const t = totals[sec.key][i].bueno + totals[sec.key][i].regular + totals[sec.key][i].malo; return t > 0 ? ((totals[sec.key][i].regular/t)*100).toFixed(1) : 0; }), backgroundColor: 'rgba(217,119,6,0.85)', borderRadius: 4, borderSkipped: false },
+              { label: 'Malo', data: sec.items.map(i => { const t = totals[sec.key][i].bueno + totals[sec.key][i].regular + totals[sec.key][i].malo; return t > 0 ? ((totals[sec.key][i].malo/t)*100).toFixed(1) : 0; }), backgroundColor: 'rgba(220,38,38,0.85)', borderRadius: 4, borderSkipped: false },
             ]
           },
           options: {
             responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 10, usePointStyle: true } }, tooltip: { mode: 'index', intersect: false } },
-            scales: { x: { ticks: { font: { size: 9 }, maxRotation: 35 }, grid: { display: false } }, y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
+            plugins: { 
+              legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' }, padding: 10, usePointStyle: true } }, 
+              tooltip: { 
+                mode: 'index', 
+                intersect: false,
+                callbacks: {
+                  label: function(ctx) {
+                    return ` ${ctx.dataset.label}: ${ctx.parsed.y}%`;
+                  }
+                }
+              } 
+            },
+            scales: { 
+              x: { ticks: { font: { size: 9 }, maxRotation: 35 }, grid: { display: false } }, 
+              y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: function(value) { return value + '%'; } }, grid: { color: 'rgba(0,0,0,0.05)' } } 
+            }
           }
         });
       });
