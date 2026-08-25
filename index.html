@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ENCUESTA DE SATISFACCIÓN</title>
+  <title>ENCUESTA DE SATISFACCIÓN - POOL Y PALAS</title>
   <link rel="icon" type="image/png" href="encuesta-en-linea.png" sizes="32x32">
   <link rel="icon" type="image/png" href="encuesta-en-linea.png" sizes="192x192">
   <link rel="apple-touch-icon" href="encuesta-en-linea.png">
@@ -101,6 +101,21 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       font-weight: 500;
+    }
+
+    .header-title-pool {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: #FFD700;
+      margin-top: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+      display: block;
+      width: 100%;
+      padding-left: 2px; /* Compensate for letter-spacing */
     }
 
     /* CONTAINER */
@@ -845,6 +860,14 @@
         font-size: 0.75rem;
       }
 
+      .header-title-pool {
+        font-size: 1.5rem;
+        margin-top: 6px;
+        text-align: center;
+        width: 100%;
+        display: block;
+      }
+
       .container {
         padding: 16px 10px 40px;
       }
@@ -1031,6 +1054,7 @@
   <div class="header">
     <div class="header-logo">COPE<span>TRAN</span></div>
     <div class="header-sub">Encuesta de Satisfacción del Servicio</div>
+    <div class="header-title-pool">POOL Y PALAS</div>
   </div>
 
   <!-- SURVEY FORM -->
@@ -1041,7 +1065,7 @@
       <div class="page1-row">
         <div class="card" style="display:flex;flex-direction:column;justify-content:center;">
           <p class="intro-text">
-            Para nosotros es importante su opinión en cuanto a la <strong>satisfacción de nuestro servicio</strong>. Le
+            Para nosotros es importante su opinión en cuanto a la <strong>satisfacción de nuestro servicio de Pool y Palas</strong>. Le
             invitamos a responder las siguientes preguntas. Su respuesta es confidencial y voluntaria.
           </p>
           <div class="form-row">
@@ -1056,50 +1080,8 @@
             →</button>
         </div>
 
-        <div class="card" style="text-align:center;">
-          <div class="card-title" style="justify-content:center;">Seleccione los servicios a evaluar</div>
-          <button class="select-all-btn" onclick="toggleAll()"
-            style="margin-left:auto;margin-right:auto;width:100%;display:block;">✓ Seleccionar
-            todos</button>
-          <div class="services-grid">
-            <div class="service-chip" onclick="toggleService(this,'supervisores')">
-              <span class="service-icon">🚐</span>
-              <div>
-                <div class="check"></div>
-              </div>
-              <span>Servicio Supervisores</span>
-            </div>
-            <div class="service-chip" onclick="toggleService(this,'bus')">
-              <span class="service-icon">🚌</span>
-              <div>
-                <div class="check"></div>
-              </div>
-              <span>Bus Intermunicipal</span>
-            </div>
-            <div class="service-chip" onclick="toggleService(this,'tajo')">
-              <span class="service-icon">&#x1F68E;</span>
-              <div>
-                <div class="check"></div>
-              </div>
-              <span>Servicio de Tajo</span>
-            </div>
-            <div class="service-chip" onclick="toggleService(this,'urbana')">
-              <span class="service-icon">🚍</span>
-              <div>
-                <div class="check"></div>
-              </div>
-              <span>Ruta Urbana</span>
-            </div>
-            <div class="service-chip" onclick="toggleService(this,'poblacion')">
-              <span class="service-icon">🛣️</span>
-              <div>
-                <div class="check"></div>
-              </div>
-              <span>Ruta de Población</span>
-            </div>
-          </div>
-          <div id="service-error" style="color:#dc2626;font-size:0.82rem;display:none;margin-top:4px;">Por favor
-            seleccione al menos un servicio.</div>
+        <div class="card" style="display:none;">
+          <!-- Service selection hidden as it's now defaulted to Pool y Palas -->
         </div>
       </div><!-- end page1-row -->
       <button class="btn-submit btn-continuar-mobile" onclick="goToSurvey()">Continuar →</button>
@@ -1243,11 +1225,7 @@
   <script>
     // ─── DATA ─────────────────────────────────────────────────────────────────────
     const SERVICES = [
-      { id: 'supervisores', label: 'Servicio Supervisores', icon: '🚐' },
-      { id: 'bus', label: 'Bus Intermunicipal', icon: '🚌' },
-      { id: 'tajo', label: 'Servicio de Tajo', icon: '&#x1F68E;' },
-      { id: 'urbana', label: 'Ruta Urbana', icon: '🚍' },
-      { id: 'poblacion', label: 'Ruta de Población', icon: '🛣️' },
+      { id: 'pool_palas', label: 'Pool y Palas', icon: '🚜' }
     ];
 
     const CONDUCTOR_ITEMS = [
@@ -1264,7 +1242,7 @@
     ];
 
     // ─── STATE ────────────────────────────────────────────────────────────────────
-    let selectedServices = new Set();
+    let selectedServices = new Set(['pool_palas']);
     let allCharts = [];
     const SHEETS_URL = "https://script.google.com/macros/s/AKfycbwWoJySqc26Y8DdnsOvJA_ItFTTnDUoF01TMTSDyqCFfYHCdeA1jgsKIYxOQ40D7TuM6Q/exec";
 
@@ -1310,11 +1288,7 @@
 
     // ─── NAVIGATION ───────────────────────────────────────────────────────────────
     function goToSurvey() {
-      if (selectedServices.size === 0) {
-        document.getElementById('service-error').style.display = 'block';
-        return;
-      }
-      document.getElementById('service-error').style.display = 'none';
+      selectedServices.add('pool_palas');
       buildSurveyTables();
       buildServiceBadges();
       showPage('page2');
@@ -1337,11 +1311,7 @@
     }
 
     function resetSurvey() {
-      selectedServices.clear();
-      document.querySelectorAll('.service-chip').forEach(c => {
-        c.classList.remove('selected');
-        c.querySelector('.check').textContent = '';
-      });
+      selectedServices = new Set(['pool_palas']);
       document.getElementById('inp_nombre').value = '';
       document.getElementById('inp_telefono').value = '';
       document.getElementById('inp_mejoras').value = '';
